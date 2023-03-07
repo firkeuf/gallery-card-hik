@@ -569,9 +569,9 @@ class GalleryCard extends LitElement {
       var fileCaption = "";
       var date = "";
       if (fileNameFormat === undefined || captionFormat === undefined)
-          fileCaption = fileName;
+        fileCaption = fileName;
       else {
-        var tokens = ["%YYY", "%m", "%d", "%H", "%M", "%S", "%p"]
+        var tokens = ["%YYY", "%m", "%d", "%H", "%M", "%S", "%p", "%unixtime0"]
         fileCaption = captionFormat;
 
         var hr = 0;
@@ -583,6 +583,7 @@ class GalleryCard extends LitElement {
         var sec = 0;
         for (let token of tokens) {
           var searchIndex = fileNameFormat.indexOf(token);
+          console.log('token', searchIndex, token);
 
           if (searchIndex >= 0) {
             var val = fileName.substring(searchIndex, searchIndex + token.length);
@@ -592,6 +593,7 @@ class GalleryCard extends LitElement {
             if (token == "%H" ) hour = parseInt(val);
             if (token == "%M" ) min = parseInt(val);
             if (token == "%S" ) sec = parseInt(val);
+            if (token == "%unixtime0" ) sec = parseInt(val) * 1000;
             if (token == "%H" && captionFormat.indexOf("%p") >= 0) {
               hr = parseInt(val);
               if (val == "00") val = 12;
@@ -605,9 +607,12 @@ class GalleryCard extends LitElement {
         }
 
         fileCaption = fileCaption.replace("%p", (hr > 11 ? "PM" : "AM"));
-
+        console.log('sec', sec)
         if (year != 0 && month != 0 && day != 0) {
           date = new Date(year, month, day, hour, min, sec);
+        }
+        if (sec != 0 ) {
+          date = new Date(sec);
         }
 
       }
