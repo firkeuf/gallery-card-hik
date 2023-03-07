@@ -583,7 +583,6 @@ class GalleryCard extends LitElement {
         var sec = 0;
         for (let token of tokens) {
           var searchIndex = fileNameFormat.indexOf(token);
-          console.log('token', searchIndex, token);
 
           if (searchIndex >= 0) {
             var val = fileName.substring(searchIndex, searchIndex + token.length);
@@ -607,12 +606,12 @@ class GalleryCard extends LitElement {
         }
 
         fileCaption = fileCaption.replace("%p", (hr > 11 ? "PM" : "AM"));
-        console.log('sec', sec)
         if (year != 0 && month != 0 && day != 0) {
           date = new Date(year, month, day, hour, min, sec);
         }
         if (sec != 0 ) {
           date = new Date(sec);
+          fileCaption = date.toLocaleString();
         }
 
       }
