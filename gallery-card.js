@@ -92,7 +92,7 @@ class GalleryCard extends LitElement {
   _downloadNextMenuVideo() {
     //let v = this.shadowRoot.querySelector(".resource-menu figure video[preload='none']");
     let v = this.shadowRoot.querySelector(".resource-menu figure video[data-src]");
-    
+
     if (v)
     {
       v.src = v.dataset.src;
@@ -132,7 +132,7 @@ class GalleryCard extends LitElement {
 
   set hass(hass) {
     this._hass = hass;
-    
+
     if (this.resources == null)
       this._loadResources(this._hass);
   }
@@ -207,7 +207,7 @@ class GalleryCard extends LitElement {
   }
 
   _videoMetadataLoaded(evt) {
-    evt.target.parentNode.querySelector(".duration").innerHTML = "[" + this._getFormattedVideoDuration(evt.target.duration) + "]";    
+    evt.target.parentNode.querySelector(".duration").innerHTML = "[" + this._getFormattedVideoDuration(evt.target.duration) + "]";
   }
 
   _popupCamera(evt) {
@@ -241,10 +241,10 @@ class GalleryCard extends LitElement {
     var seconds = parseInt(duration % 60);
     seconds = "0" + seconds;
     seconds = seconds.substring(seconds.length - 2);
-    
-    return minutes + ":" + seconds;    
-  }  
-  
+
+    return minutes + ":" + seconds;
+  }
+
   _keyNavigation(evt) {
     switch(evt.code) {
       case "ArrowDown":
@@ -260,40 +260,40 @@ class GalleryCard extends LitElement {
     }
   }
 
-  _handleTouchStart(evt) {                                         
-      this.xDown = evt.touches[0].clientX;                                      
-      this.yDown = evt.touches[0].clientY;                                      
-  }; 
-  
+  _handleTouchStart(evt) {
+      this.xDown = evt.touches[0].clientX;
+      this.yDown = evt.touches[0].clientY;
+  };
+
   _handleTouchMove(evt) {
       if ( ! this.xDown || ! this.yDown ) {
           return;
       }
-      var xUp = evt.touches[0].clientX;                                    
+      var xUp = evt.touches[0].clientX;
       var yUp = evt.touches[0].clientY;
       var xDiff = this.xDown - xUp;
       var yDiff = this.yDown - yUp;
-  
+
       if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
           if ( xDiff > 0 ) {
-          /* left swipe */ 
+          /* left swipe */
           this._selectResource(this.currentResourceIndex+1);
           evt.preventDefault();
           } else {
           /* right swipe */
           this._selectResource(this.currentResourceIndex-1);
           evt.preventDefault();
-          }                       
+          }
       } else {
           if ( yDiff > 0 ) {
-          /* up swipe */ 
-          } else { 
+          /* up swipe */
+          } else {
           /* down swipe */
-          }                                                                 
+          }
       }
       /* reset values */
       this.xDown = null;
-      this.yDown = null;                                            
+      this.yDown = null;
   };
 
   _loadResources(hass) {
@@ -354,7 +354,7 @@ class GalleryCard extends LitElement {
     Promise.all(commands).then(resources => {
       this.resources = resources.filter(result => !result.error).flat(Infinity);
 
-      if (parsedDateSort) {        
+      if (parsedDateSort) {
         if (reverseSort) {
           this.resources.sort(function (x, y) { return y.date - x.date; });
         }
@@ -378,7 +378,7 @@ class GalleryCard extends LitElement {
         }, {count: resources.filter(resource => resource.isHass).length});
       }
 
-      this.currentResourceIndex = 0; 
+      this.currentResourceIndex = 0;
       if (!(this.parentNode && this.parentNode.tagName && this.parentNode.tagName.toLowerCase() == "hui-card-preview")) {
         //Give the UI a second to refresh before setting focus, so that keypresses work
         setTimeout(() => {this.shadowRoot.querySelector('.resource-viewer button').focus();}, 1000);
@@ -430,7 +430,7 @@ class GalleryCard extends LitElement {
     }
 
     return Promise.all(this._fetchMedia(ref, hass, mediaItem, recursive))
-      .then(function(values) { 
+      .then(function(values) {
         var mediaItems = values
           .flat(Infinity)
           .filter(function(item) {return item !== undefined})
@@ -447,17 +447,17 @@ class GalleryCard extends LitElement {
 
         if (reverseSort)
           mediaItems.reverse();
-          
+
         if (maximumFiles != undefined && !isNaN(maximumFiles) && maximumFiles < mediaItems.length) {
           mediaItems.length = maximumFiles;
-        }        
+        }
 
         return Promise.all(mediaItems.map(function(mediaItem) {
           return ref._fetchMediaItem(hass, mediaItem.media_content_id)
             .then(function(auth) {
               return {
                 ...mediaItem,
-                authenticated_path: auth.url 
+                authenticated_path: auth.url
               };
             });
         }));
@@ -471,7 +471,7 @@ class GalleryCard extends LitElement {
       if (mediaItem.children) {
         commands.push(
           ...mediaItem.children
-          .filter(mediaItem => { 
+          .filter(mediaItem => {
             return (mediaItem.media_class == "video" || mediaItem.media_class == "image" || (recursive && mediaItem.media_class == "directory")) && mediaItem.title != "@eaDir/";
           })
           .map(mediaItem => {
@@ -518,7 +518,7 @@ class GalleryCard extends LitElement {
       caption: camera.attributes.friendly_name ?? entityId,
       isHass: true
     }
-  
+
     return Promise.resolve(resource);
   }
 
@@ -543,7 +543,7 @@ class GalleryCard extends LitElement {
           fileUrl = "/local/" + filePath.substring(filePath.indexOf("/www/")+5);
 
         var resource = this._createFileResource(fileUrl, fileNameFormat, captionFormat, captionLeadingZeros);
-        
+
         if (resource !== undefined) {
           resources.push(resource);
         }
@@ -605,11 +605,11 @@ class GalleryCard extends LitElement {
         }
 
         fileCaption = fileCaption.replace("%p", (hr > 11 ? "PM" : "AM"));
-        
+
         if (year != 0 && month != 0 && day != 0) {
           date = new Date(year, month, day, hour, min, sec);
-        }    
-        
+        }
+
       }
 
       resource = {
@@ -829,8 +829,7 @@ class GalleryCard extends LitElement {
       .modal-content {
         margin: auto;
         display: block;
-        width: 80%;
-        max-width: 700px;
+        width: 98%;
       }
       /* Caption of Modal Image (Image Text) - Same Width as the Image */
       #popupCaption {
@@ -898,7 +897,7 @@ class GalleryCardEditor extends LitElement {
     if (this._config.file_name_format && this._config.file_name_format != ""
       && this._config.caption_format && this._config.caption_format != "") {
       this._captionExample = this.generateSampleText(this._config.caption_format, this._config.caption_leading_zeros);
-    } 
+    }
   }
 
   configChanged(newConfig) {
@@ -952,7 +951,7 @@ class GalleryCardEditor extends LitElement {
 
   get _reverseSort() {
     return this._config.reverse_sort ?? true;
-  }  
+  }
 
   get _showReload() {
     return this._config.show_reload ?? false;
@@ -982,7 +981,7 @@ class GalleryCardEditor extends LitElement {
       if (hr == 0)
         hr = 12;
     }
-    
+
     returnString = returnString.replace("%H", this.formatDate2Digits(hr, zeroPad));
     returnString = returnString.replace("%M", this.formatDate2Digits(d.getMinutes(), zeroPad));
     returnString = returnString.replace("%S", this.formatDate2Digits(d.getSeconds(), zeroPad));
@@ -1188,7 +1187,7 @@ class GalleryCardEditor extends LitElement {
     const target = ev.target;
 
     if (
-      (target.configValue === "title" && target.value === this._title) 
+      (target.configValue === "title" && target.value === this._title)
     ) {
       return;
     }
@@ -1236,7 +1235,7 @@ class GalleryCardEditor extends LitElement {
     };
 
     this.closeAddMedia();
-    this.configChanged(this._config);  
+    this.configChanged(this._config);
   }
 
   showAddMedia() {
@@ -1246,7 +1245,7 @@ class GalleryCardEditor extends LitElement {
     this._addMediaOpened = false;
   }
 
-  _fetchMediaContents() {    
+  _fetchMediaContents() {
     this.hass.callWS({
       type: "media_source/browse_media",
       media_content_id: "media-source://media_source" + this._selectedMediaPath
@@ -1257,7 +1256,7 @@ class GalleryCardEditor extends LitElement {
       if (this._addMediaOpened) {
         this.shadowRoot.querySelector(".card-config").querySelector("#addMediaDD").selected = undefined;
         this.shadowRoot.querySelector(".card-config").querySelector("#addMediaDD").selected = 0;
-        
+
         this.shadowRoot.querySelector(".card-config").querySelector("paper-dropdown-menu").open();
       }
     });
@@ -1267,7 +1266,7 @@ class GalleryCardEditor extends LitElement {
     this._addMediaOpened = false;
 
     this._selectedMediaPath = "";
-    this._fetchMediaContents();  
+    this._fetchMediaContents();
   }
 
   browseDirectory(ev) {
@@ -1282,7 +1281,7 @@ class GalleryCardEditor extends LitElement {
   upDirectory(ev) {
     if (this._selectedMediaPath != "") {
       var newVal = this._selectedMediaPath;
-      if (newVal.substring(newVal.length - 2, newVal.length) == "/.") 
+      if (newVal.substring(newVal.length - 2, newVal.length) == "/.")
         newVal = newVal.substring(0, newVal.length - 2);
       if (newVal.substring(newVal.length - 1, newVal.length) == "/")
         newVal = newVal.substring(0, newVal.length - 1);
